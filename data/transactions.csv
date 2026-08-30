@@ -1,0 +1,48 @@
+customer_id,amount,failure_reason,attempt_count,previous_recovery_success,days_overdue,preferred_channel,is_disputed,customer_reply,scenario
+CUST0025,12892,card_expired,0,True,1,sms,False,Sure,expired_card
+CUST0015,11913,insufficient_funds,1,False,2,email,False,,insufficient_funds
+CUST0032,1541,network_error,0,False,8,email,False,Sure,low_risk_mixed
+CUST0006,1881,network_error,1,False,2,sms,False,,retryable
+CUST0041,11222,bank_declined,1,False,9,email,True,"I already paid this last week, please check again.",disputed_case
+CUST0003,1895,network_error,0,True,1,sms,False,,retryable
+CUST0045,24125,insufficient_funds,3,False,23,whatsapp,False,,max_retries
+CUST0012,11865,insufficient_funds,1,False,11,sms,False,"Yes I'll pay, just need until next week.",insufficient_funds
+CUST0013,20147,insufficient_funds,0,False,5,whatsapp,False,,insufficient_funds
+CUST0043,21640,bank_declined,0,True,6,email,True,"I already paid this last week, please check again.",disputed_case
+CUST0002,3771,network_error,0,True,1,call,False,,retryable
+CUST0044,18230,insufficient_funds,3,True,17,email,False,"Sorry, will pay tomorrow, just got my salary delayed.",max_retries
+CUST0031,1290,network_error,0,True,5,whatsapp,False,Sure,low_risk_mixed
+CUST0008,1511,network_error,1,False,8,sms,False,,retryable
+CUST0039,18141,fraud_suspected,1,True,6,email,False,"I never made this purchase, someone else used my card.",fraud
+CUST0021,8655,card_expired,1,False,10,call,False,,expired_card
+CUST0037,19520,fraud_suspected,0,True,2,sms,False,"This looks like fraud, I don't recognize this transaction.",fraud
+CUST0036,18824,fraud_suspected,1,True,4,whatsapp,False,"I never made this purchase, someone else used my card.",fraud
+CUST0007,2470,network_error,1,False,1,whatsapp,False,,retryable
+CUST0010,1933,network_error,0,False,10,sms,False,,retryable
+CUST0027,4804,network_error,1,True,3,whatsapp,False,Sure,low_risk_mixed
+CUST0028,4684,network_error,1,False,7,sms,False,,low_risk_mixed
+CUST0018,7978,insufficient_funds,0,True,15,sms,False,"Yes I'll pay, just need until next week.",insufficient_funds
+CUST0038,12745,fraud_suspected,0,True,2,call,False,"I never made this purchase, someone else used my card.",fraud
+CUST0026,9207,card_expired,0,False,4,email,False,OK,expired_card
+CUST0046,13703,insufficient_funds,4,False,17,email,False,,max_retries
+CUST0042,6873,bank_declined,0,True,15,call,True,"I was charged twice for the same order, please refund one.",disputed_case
+CUST0040,13690,bank_declined,0,False,17,whatsapp,True,"This charge is wrong, I never authorized this transaction.",disputed_case
+CUST0004,3872,network_error,0,False,10,email,False,Sure,retryable
+CUST0022,13630,card_expired,1,True,0,sms,False,OK,expired_card
+CUST0030,1290,network_error,0,True,0,email,False,,low_risk_mixed
+CUST0034,80606,bank_declined,1,True,13,sms,False,,high_value
+CUST0001,4037,network_error,0,False,0,email,False,,retryable
+CUST0020,23128,card_expired,1,True,8,sms,False,,expired_card
+CUST0029,2384,network_error,0,True,1,email,False,,low_risk_mixed
+CUST0011,14108,insufficient_funds,0,False,12,whatsapp,False,"Yes I'll pay, just need until next week.",insufficient_funds
+CUST0019,24543,card_expired,0,True,13,call,False,Sure,expired_card
+CUST0024,5638,card_expired,1,True,15,whatsapp,False,OK,expired_card
+CUST0016,9681,insufficient_funds,1,False,14,email,False,,insufficient_funds
+CUST0047,7377,insufficient_funds,4,True,20,call,False,"Give me 2 days, I'll clear this by Friday.",max_retries
+CUST0023,17252,card_expired,0,True,4,sms,False,,expired_card
+CUST0009,3533,network_error,1,False,10,email,False,,retryable
+CUST0017,24121,insufficient_funds,1,False,13,whatsapp,False,,insufficient_funds
+CUST0033,56181,bank_declined,1,True,6,call,False,OK,high_value
+CUST0014,12505,insufficient_funds,1,True,1,whatsapp,False,Sure,insufficient_funds
+CUST0035,57161,bank_declined,1,True,10,email,False,,high_value
+CUST0005,4108,network_error,1,True,0,call,False,OK,retryable

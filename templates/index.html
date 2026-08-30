@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecoverX Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root { --accent: #8b5cf6; --accent-2: #22d3ee; }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { background:#000000; color:#fafafa; min-height:100vh; padding:40px 60px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:16px; }
+    .brand { display:flex; align-items:baseline; gap:12px; }
+    .brand h1 { font-size:1.4rem; font-weight:700; letter-spacing:-0.02em; }
+    .brand .tag { font-size:0.85rem; color:#a1a1aa; font-weight:500; }
+    .btn-group { display:flex; gap:10px; align-items:center; }
+
+    .toggle-wrap {
+        display:flex; align-items:center; gap:10px;
+        background:#111111; border:1px solid #27272a; border-radius:8px;
+        padding:8px 14px; font-size:0.82rem; color:#a1a1aa; font-weight:600;
+    }
+    .toggle-switch {
+        position:relative; width:44px; height:24px;
+        background:#27272a; border-radius:20px; cursor:pointer;
+        transition: background 0.3s ease;
+    }
+    .toggle-switch.on { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .toggle-knob {
+        position:absolute; top:2px; left:2px;
+        width:20px; height:20px; background:#fff; border-radius:50%;
+        transition: transform 0.3s ease;
+    }
+    .toggle-switch.on .toggle-knob { transform: translateX(20px); }
+    .toggle-label { color:#fafafa; }
+
+    #exportBtn { background:transparent; border:1px solid #27272a; color:#d4d4d8; padding:10px 20px; font-weight:600; font-size:0.88rem; border-radius:8px; cursor:pointer; transition: all 0.2s ease; }
+    #exportBtn:hover { border-color:#52525b; color:#fafafa; }
+    #runBtn { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border:none; padding:10px 22px; font-weight:600; font-size:0.88rem; border-radius:8px; cursor:pointer; transition: opacity 0.2s ease, transform 0.15s ease; }
+    #runBtn:hover { opacity:0.85; }
+    #runBtn:active { transform: scale(0.97); }
+
+    .comparison-banner {
+        display:none;
+        background: linear-gradient(90deg, rgba(139,92,246,0.1), rgba(34,211,238,0.1));
+        border:1px solid #3f3f46; border-radius:12px;
+        padding:16px 24px; margin-bottom:20px;
+        font-size:0.9rem; color:#e4e4e7; text-align:center;
+    }
+    .comparison-banner.show { display:block; }
+    .comparison-banner b { color:#c4b5fd; }
+
+    .grid-4 { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:16px; }
+    .card-metric { background:#111111; border:1px solid #27272a; border-radius:12px; padding:22px 24px; position:relative; overflow:hidden; transition: border-color 0.3s ease, background-color 0.3s ease; }
+    .card-metric::before { content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); opacity:0.6; }
+    .card-metric:hover { border-color:#52525b; background:#1a1a1a; }
+    .card-metric .label { font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; color:#a1a1aa; font-weight:600; margin-bottom:10px; }
+    .card-metric .value { font-size:1.85rem; font-weight:700; letter-spacing:-0.04em; color:#fafafa; }
+
+    .grid-2 { display:grid; grid-template-columns:340px 1fr; gap:16px; margin-bottom:16px; align-items:stretch; }
+    .chart-box { display:flex; align-items:center; justify-content:center; padding:20px; }
+    .panel { background:#111111; border:1px solid #27272a; border-radius:12px; padding:24px; }
+    .stat-row { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid #1f1f22; }
+    .stat-row:last-child { border-bottom:none; }
+    .stat-row .label { color:#a1a1aa; font-size:0.88rem; }
+    .stat-row .val { color:#fafafa; font-weight:600; font-size:0.95rem; letter-spacing:-0.02em; }
+
+    .table-wrap { background:#111111; border:1px solid #27272a; border-radius:12px; overflow:hidden; }
+    .table-scroll { max-height:460px; overflow-y:auto; }
+    .table-scroll::-webkit-scrollbar { width:8px; }
+    .table-scroll::-webkit-scrollbar-track { background:#111111; }
+    .table-scroll::-webkit-scrollbar-thumb { background:#27272a; border-radius:10px; }
+    table { width:100%; border-collapse:collapse; }
+    thead th { position:sticky; top:0; background:#111111; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; color:#a1a1aa; font-weight:600; text-align:left; padding:14px 20px; border-bottom:1px solid #27272a; }
+    tbody td { padding:14px 20px; font-size:0.875rem; color:#e4e4e7; border-bottom:1px solid #1a1a1c; vertical-align:middle; }
+    tbody tr:hover td { background:#161618; }
+    .cust-id { font-family:'Courier New',monospace; color:#a1a1aa; font-size:0.82rem; }
+    .amount-text { font-weight:500; color:#fafafa; }
+    .reason-text { color:#71717a; font-size:0.82rem; }
+
+    .badge-outline { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:6px; font-size:0.7rem; font-weight:700; letter-spacing:0.03em; background:transparent; border:1px solid; }
+    .badge-outline .dot { width:6px; height:6px; border-radius:50%; }
+    .badge-recovered { border-color:#10b981; color:#34d399; }
+    .badge-recovered .dot { background:#34d399; }
+    .badge-escalated { border-color:#f59e0b; color:#fbbf24; }
+    .badge-escalated .dot { background:#fbbf24; }
+    .badge-stopped { border-color:#ef4444; color:#f87171; }
+    .badge-stopped .dot { background:#f87171; }
+    .badge-notrecovered { border-color:#52525b; color:#a1a1aa; }
+    .badge-notrecovered .dot { background:#a1a1aa; }
+    .badge-followup { border-color:#a78bfa; color:#c4b5fd; }
+    .badge-followup .dot { background:#c4b5fd; }
+
+    .btn-log { background:transparent; border:1px solid #27272a; color:#d4d4d8; font-size:0.76rem; padding:6px 13px; border-radius:6px; font-weight:500; cursor:pointer; transition: all 0.2s ease; }
+    .btn-log:hover { border-color:#52525b; color:#fafafa; }
+
+    .pagination-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-top:1px solid #27272a; color:#71717a; font-size:0.82rem; }
+    .pagination-bar button { background:transparent; border:1px solid #27272a; color:#d4d4d8; padding:5px 14px; border-radius:6px; font-size:0.8rem; margin-left:8px; cursor:pointer; }
+    .pagination-bar button:disabled { opacity:0.3; cursor:not-allowed; }
+    .pagination-bar button:not(:disabled):hover { border-color:#52525b; }
+
+    .empty-state { text-align:center; padding:70px 20px; color:#52525b; font-size:0.9rem; }
+
+    .modal-backdrop-custom { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
+    .modal-backdrop-custom.show { display:flex; }
+    .modal-box { background:#111111; border:1px solid #27272a; border-radius:14px; width:520px; max-width:90vw; max-height:80vh; overflow:auto; }
+    .modal-header-custom { display:flex; justify-content:space-between; align-items:center; padding:20px 22px; border-bottom:1px solid #27272a; }
+    .modal-header-custom h5 { font-size:1rem; font-weight:700; }
+    .modal-close { background:none; border:none; color:#a1a1aa; font-size:1.2rem; cursor:pointer; }
+    .modal-close:hover { color:#fafafa; }
+    #logContent { background:#000000; color:#34d399; font-size:0.85rem; padding:18px; border-radius:8px; margin:20px; white-space:pre-wrap; word-wrap:break-word; font-family:'Courier New',monospace; border:1px solid #1f1f22; }
+
+    @media (max-width: 1000px) {
+        body { padding:24px; }
+        .grid-4 { grid-template-columns:repeat(2,1fr); }
+        .grid-2 { grid-template-columns:1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">
+        <h1>🔁 RecoverX</h1>
+        <span class="tag">AI Revenue Recovery Agent</span>
+    </div>
+    <div class="btn-group">
+        <div class="toggle-wrap">
+            <span class="toggle-label" id="toggleLabel">AI Engine: ON</span>
+            <div class="toggle-switch on" id="aiToggle" onclick="toggleAI()">
+                <div class="toggle-knob"></div>
+            </div>
+        </div>
+        <button id="exportBtn" onclick="exportCSV()">⬇ Export CSV</button>
+        <button id="runBtn" onclick="runAgent()">▶ Run Agent</button>
+    </div>
+</div>
+
+<div class="comparison-banner" id="comparisonBanner"></div>
+
+<div class="grid-4">
+    <div class="card-metric"><div class="label">Total at Risk</div><div class="value" id="mTotal">—</div></div>
+    <div class="card-metric"><div class="label">Recovered</div><div class="value" id="mRecovered" style="color:#34d399;">—</div></div>
+    <div class="card-metric"><div class="label">Escalated</div><div class="value" id="mEscalated" style="color:#fbbf24;">—</div></div>
+    <div class="card-metric"><div class="label">Stopped</div><div class="value" id="mStopped" style="color:#f87171;">—</div></div>
+    <div class="card-metric"><div class="label">Follow-ups Scheduled</div><div class="value" id="mFollowUp" style="color:#c4b5fd;">—</div></div>
+</div>
+
+<div class="grid-2">
+    <div class="chart-box"><canvas id="donutChart"></canvas></div>
+    <div class="panel">
+        <div class="stat-row"><span class="label">Attempt Success Rate</span><span class="val" id="mAttemptRate">—</span></div>
+        <div class="stat-row"><span class="label">Automated Recovery Attempted</span><span class="val" id="mAttempted">—</span></div>
+        <div class="stat-row"><span class="label">Attempted, Not Recovered</span><span class="val" id="mNotRecovered">—</span></div>
+    </div>
+</div>
+
+<div class="table-wrap">
+    <div class="table-scroll">
+        <table>
+            <thead><tr><th>Customer</th><th>Amount</th><th>Action</th><th>Outcome</th><th>Reason</th><th>Audit</th></tr></thead>
+            <tbody id="txnTable"><tr><td colspan="6"><div class="empty-state">Click "Run Agent" to process transactions</div></td></tr></tbody>
+        </table>
+    </div>
+    <div class="pagination-bar" id="pagBar" style="display:none;">
+        <span id="pagInfo"></span>
+        <div><button onclick="changePage(-1)" id="prevBtn">← Prev</button><button onclick="changePage(1)" id="nextBtn">Next →</button></div>
+    </div>
+</div>
+
+<div class="modal-backdrop-custom" id="logModal">
+    <div class="modal-box">
+        <div class="modal-header-custom"><h5>🧾 Transaction Audit Trail</h5><button class="modal-close" onclick="closeModal()">✕</button></div>
+        <pre id="logContent"></pre>
+    </div>
+</div>
+
+<script>
+let chart;
+let dataAI = null;
+let dataRules = null;
+let aiEnabled = true;
+let allResults = [];
+let currentPage = 1;
+const PAGE_SIZE = 10;
+
+const centerTextPlugin = {
+    id: 'centerText',
+    afterDraw(chart) {
+        const {ctx, chartArea: {left, right, top, bottom}} = chart;
+        ctx.save();
+        const centerX = (left + right) / 2;
+        const centerY = (top + bottom) / 2;
+        ctx.font = '700 20px Inter';
+        ctx.fillStyle = '#fafafa';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const total = chart.data.datasets[0].data.reduce((a,b)=>a+b, 0);
+        ctx.fillText('₹' + total.toLocaleString(), centerX, centerY - 8);
+        ctx.font = '400 11px Inter';
+        ctx.fillStyle = '#a1a1aa';
+        ctx.fillText('Total Processed', centerX, centerY + 14);
+        ctx.restore();
+    }
+};
+Chart.register(centerTextPlugin);
+
+function badgeClass(outcome) {
+    if (outcome === "RECOVERED") return "badge-recovered";
+    if (outcome === "PENDING_HUMAN_REVIEW") return "badge-escalated";
+    if (outcome === "STOPPED_BY_GUARDRAIL") return "badge-stopped";
+    if (outcome === "FOLLOW_UP_SCHEDULED") return "badge-followup";
+    return "badge-notrecovered";
+}
+
+function closeModal() { document.getElementById('logModal').classList.remove('show'); }
+
+function viewLog(dataStr) {
+    const data = JSON.parse(dataStr.replace(/&quot;/g, '"').replace(/&apos;/g, "'"));
+    const auditObj = {
+        transaction_id: data.customer_id,
+        amount: "₹" + data.amount,
+        failure_reason: data.failure_reason,
+        customer_reply: data.customer_reply || "(none)",
+        ai_intent: data.ai_intent || "NONE",
+        ai_reasoning: data.ai_reasoning || "(no AI reasoning - rule-based decision)",
+        decision: data.action,
+        decision_reason: data.reason,
+        guardrail_status: data.requires_human ? "ESCALATED" : "PASSED",
+        outcome: data.outcome,
+        verification_status: data.outcome === "RECOVERED" ? "SIMULATED_SUCCESS" : "SIMULATED",
+        timestamp: new Date().toISOString()
+    };
+    document.getElementById('logContent').innerText = JSON.stringify(auditObj, null, 2);
+    document.getElementById('logModal').classList.add('show');
+}
+
+function renderPage() {
+    const tbody = document.getElementById("txnTable");
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = allResults.slice(start, start + PAGE_SIZE);
+    tbody.innerHTML = "";
+    pageItems.forEach(r => {
+        const logData = JSON.stringify(r).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+        tbody.innerHTML += `<tr>
+            <td class="cust-id">${r.customer_id}</td>
+            <td class="amount-text">₹${parseInt(r.amount).toLocaleString()}</td>
+            <td>${r.action}</td>
+            <td><span class="badge-outline ${badgeClass(r.outcome)}"><span class="dot"></span>${r.outcome.replace(/_/g,' ')}</span></td>
+            <td class="reason-text">${r.reason}</td>
+            <td><button class="btn-log" onclick="viewLog('${logData}')">View Log</button></td>
+        </tr>`;
+    });
+    const totalPages = Math.ceil(allResults.length / PAGE_SIZE);
+    document.getElementById("pagInfo").innerText = `Showing ${start+1}–${Math.min(start+PAGE_SIZE, allResults.length)} of ${allResults.length}`;
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage === totalPages;
+    document.getElementById("pagBar").style.display = "flex";
+}
+
+function changePage(dir) { currentPage += dir; renderPage(); }
+
+function animateValue(el, start, end, duration, prefix="₹") {
+    const startTime = performance.now();
+    function step(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (end - start) * eased);
+        el.innerText = prefix + current.toLocaleString();
+        if (progress < 1) requestAnimationFrame(step);
+        else el.innerText = prefix + end.toLocaleString();
+    }
+    requestAnimationFrame(step);
+}
+
+function exportCSV() {
+    if (allResults.length === 0) { alert("Run the agent first before exporting."); return; }
+    const headers = ["Customer ID", "Amount", "Failure Reason", "Customer Reply", "AI Intent", "AI Reasoning", "Action", "Decision Reason", "Outcome", "Recovered Amount"];
+    const rows = allResults.map(r => [
+        r.customer_id, r.amount, r.failure_reason,
+        `"${(r.customer_reply || "").replace(/"/g, '""')}"`,
+        r.ai_intent || "NONE",
+        `"${(r.ai_reasoning || "").replace(/"/g, '""')}"`,
+        r.action, `"${r.reason.replace(/"/g, '""')}"`, r.outcome, r.recovered_amount
+    ]);
+    let csvContent = headers.join(",") + "\n" + rows.map(row => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "recoverx_audit_trail.csv"; a.click();
+    URL.revokeObjectURL(url);
+}
+
+function renderSummary(s, results) {
+    allResults = results;
+    currentPage = 1;
+    animateValue(document.getElementById("mTotal"), 0, s.total_at_risk, 900);
+    animateValue(document.getElementById("mRecovered"), 0, s.total_recovered, 900);
+    animateValue(document.getElementById("mEscalated"), 0, s.total_escalated, 900);
+    animateValue(document.getElementById("mStopped"), 0, s.total_stopped, 900);
+    animateValue(document.getElementById("mFollowUp"), 0, s.total_follow_up, 900);
+    animateValue(document.getElementById("mAttempted"), 0, s.attempted_amount, 900);
+    animateValue(document.getElementById("mNotRecovered"), 0, s.total_not_recovered, 900);
+    document.getElementById("mAttemptRate").innerText = s.attempt_success_rate + "%";
+    renderPage();
+
+    if (chart) chart.destroy();
+    Chart.defaults.color = '#a1a1aa';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    const ctx = document.getElementById('donutChart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Recovered', 'Escalated', 'Stopped', 'Not Recovered'],
+            datasets: [{
+                data: [s.total_recovered, s.total_escalated, s.total_stopped, s.total_not_recovered],
+                backgroundColor: ['#34d399', '#fbbf24', '#f87171', '#52525b'],
+                borderColor: '#000000', borderWidth: 3
+            }]
+        },
+        options: { responsive:true, cutout:'70%', plugins:{ legend:{ position:'bottom', labels:{ padding:15, font:{size:11}, boxWidth:8 } } } }
+    });
+}
+
+function updateComparisonBanner() {
+    if (!dataAI || !dataRules) return;
+    const banner = document.getElementById("comparisonBanner");
+    const diff = dataAI.summary_ai.total_recovered - dataRules.summary_rules.total_recovered;
+    const diffPct = dataRules.summary_rules.total_recovered > 0
+        ? ((diff / dataRules.summary_rules.total_recovered) * 100).toFixed(1)
+        : "N/A";
+    banner.innerHTML = `Without AI: <b>₹${dataRules.summary_rules.total_recovered.toLocaleString()}</b> recovered &nbsp;|&nbsp; With AI: <b>₹${dataAI.summary_ai.total_recovered.toLocaleString()}</b> recovered &nbsp;|&nbsp; <b style="color:#34d399;">+${diffPct}% improvement</b>`;
+    banner.classList.add("show");
+}
+
+function toggleAI() {
+    aiEnabled = !aiEnabled;
+    const toggle = document.getElementById("aiToggle");
+    const label = document.getElementById("toggleLabel");
+    toggle.classList.toggle("on", aiEnabled);
+    label.innerText = "AI Engine: " + (aiEnabled ? "ON" : "OFF");
+
+    if (dataAI && dataRules) {
+        if (aiEnabled) {
+            renderSummary(dataAI.summary_ai, dataAI.results_ai);
+        } else {
+            renderSummary(dataRules.summary_rules, dataRules.results_rules);
+        }
+    }
+}
+
+function runAgent() {
+    document.getElementById("runBtn").innerText = "Running...";
+    fetch("/api/run")
+        .then(res => res.json())
+        .then(data => {
+            dataAI = { summary_ai: data.summary_ai, results_ai: data.results_ai };
+            dataRules = { summary_rules: data.summary_rules, results_rules: data.results_rules };
+
+            if (aiEnabled) {
+                renderSummary(dataAI.summary_ai, dataAI.results_ai);
+            } else {
+                renderSummary(dataRules.summary_rules, dataRules.results_rules);
+            }
+            updateComparisonBanner();
+
+            document.getElementById("runBtn").innerText = "▶ Run Agent";
+        });
+}
+</script>
+</body>
+</html>
