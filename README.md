@@ -89,6 +89,8 @@ Evaluated on a synthetic batch of **53 high-risk transactions**:
 
 ## 🏗️ Architecture
 
+![RecoverX Architecture](recoverx_architecture.png)
+
 Payment Gateway / CRM
 │
 ▼
