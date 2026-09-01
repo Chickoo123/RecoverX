@@ -1,5 +1,7 @@
-﻿.env
+.env
 venv/
 .venv/
 __pycache__/
 *.pyc
+data/ai_classification_cache.json
+data/audit_history.jsonl
