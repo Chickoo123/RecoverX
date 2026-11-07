@@ -2,6 +2,10 @@
 
 [![Safety tests](https://github.com/Chickoo123/RecoverX/actions/workflows/tests.yml/badge.svg)](https://github.com/Chickoo123/RecoverX/actions/workflows/tests.yml) ![Python](https://img.shields.io/badge/python-3.11%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
+Part of **[Harshil Desai's evidence-first tools for Indian finance](https://github.com/Chickoo123)**: [LoanLens](https://github.com/Chickoo123/loanlens) · [PaisaTrail](https://github.com/Chickoo123/paisatrail) · [IPO Lab](https://github.com/Chickoo123/ipo-reality-lab) · [RecoverX](https://github.com/Chickoo123/RecoverX)
+
+![RecoverX dashboard after a run: recovered, escalated and stopped amounts with AI impact panel](docs/dashboard.jpg)
+
 RecoverX is a safety-first revenue recovery MVP built for the Razorpay AI Revenue Recovery track. It uses an LLM to interpret customer context, then routes that context through deterministic policy guardrails before any recovery action is selected.
 
 > **Important:** payment outcomes and recovered amounts in this repository are simulated for the MVP benchmark. RecoverX does not move real money.
