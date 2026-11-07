@@ -1,3 +1,4 @@
+import os
 import csv
 import json
 import random
@@ -111,4 +112,6 @@ def run_agent():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Debug mode exposes an interactive console; keep it opt-in for local demos only.
+    debug = os.environ.get("FLASK_DEBUG", "0").lower() in {"1", "true", "yes"}
+    app.run(debug=debug, host="127.0.0.1", port=int(os.environ.get("PORT", "5000")))

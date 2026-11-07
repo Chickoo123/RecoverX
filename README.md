@@ -1,5 +1,7 @@
 # RecoverX — AI Revenue Recovery Agent
 
+[![Safety tests](https://github.com/Chickoo123/RecoverX/actions/workflows/tests.yml/badge.svg)](https://github.com/Chickoo123/RecoverX/actions/workflows/tests.yml) ![Python](https://img.shields.io/badge/python-3.11%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+
 RecoverX is a safety-first revenue recovery MVP built for the Razorpay AI Revenue Recovery track. It uses an LLM to interpret customer context, then routes that context through deterministic policy guardrails before any recovery action is selected.
 
 > **Important:** payment outcomes and recovered amounts in this repository are simulated for the MVP benchmark. RecoverX does not move real money.
@@ -82,7 +84,8 @@ GROQ_API_KEY=your_api_key_here
 Then:
 
 ```powershell
-python app.py
+python app.py              # debug off by default
+$env:FLASK_DEBUG=1; python app.py   # opt-in debug for local demos
 ```
 
 Open `http://127.0.0.1:5000`.
@@ -93,7 +96,7 @@ Open `http://127.0.0.1:5000`.
 python -m unittest discover -s tests -v
 ```
 
-The submission safety suite covers dispute hard-stop, fraud escalation, promise-to-pay follow-up, retry limits, follow-up accounting, and deterministic simulation.
+The safety suite (run on every push via GitHub Actions) covers dispute hard-stop, fraud escalation, promise-to-pay follow-up, retry limits, guardrail precedence over AI intent, aged-receivable escalation, follow-up accounting, and deterministic simulation.
 
 ## Demo flow
 
