@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RecoverX Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='family.css') }}">
 <style>
     :root { --accent: #8b5cf6; --accent-2: #22d3ee; }
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
@@ -340,13 +340,60 @@
         .queue-item { grid-template-columns:1fr auto; }
         .queue-item .queue-view { grid-column:2; grid-row:1 / span 2; }
     }
+
+/* ================= Evidence Editorial alignment =================
+   Shared language with LoanLens, PaisaTrail and IPO Lab (static/family.css). */
+:root { --accent: #3d3592; --accent-ink: #fff; --accent-soft: #ecebf7; }
+* { font-family: inherit; }
+body { font-family: var(--font-sans); background: var(--paper); color: var(--ink); padding: 0; -webkit-font-smoothing: antialiased; }
+.rx-main { max-width: 1360px; margin: 0 auto; padding: 28px 40px 56px; }
+.brand { align-items: center; }
+.brand h1 { font: 700 1.35rem/1 var(--font-sans); color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.rx-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); display: inline-grid; place-items: center; }
+.rx-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.brand .tag { color: var(--muted); }
+.toggle-wrap { background: var(--surface); border-color: var(--hair); color: var(--muted); }
+.toggle-label { color: var(--ink); }
+.toggle-switch { background: var(--surface-3); }
+.toggle-switch.on { background: var(--accent); }
+#exportBtn { background: var(--surface); border-color: var(--hair-strong); color: var(--ink); }
+#exportBtn:hover { border-color: var(--ink-2); color: var(--ink); }
+#runBtn { background: var(--accent); }
+#runBtn:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 86%, #000); }
+.card-metric, .panel, .chart-box, .table-wrap, .impact-panel, .insights-panel, .modal-box, .decision-modal { background: var(--surface) !important; border: 1px solid var(--hair) !important; box-shadow: var(--shadow-1); color: var(--ink); }
+.card-metric::before { display: none; }
+.card-metric:hover { background: var(--surface) !important; border-color: var(--hair-strong) !important; }
+.card-metric .label, .impact-label, .stat-row .label, .mini-count, thead th { color: var(--muted) !important; }
+.card-metric .value, .stat-row .val, .impact-stat strong, .decision-card .big-value { color: var(--ink) !important; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+#mRecovered { color: var(--ok) !important; } #mEscalated { color: var(--check) !important; } #mStopped { color: var(--issue) !important; } #mFollowUp { color: var(--accent) !important; }
+.impact-head h2, .section-head h3, .modal-header-custom h5, .decision-header-title { font-family: var(--font-serif); color: var(--ink) !important; letter-spacing: -.015em; }
+.impact-kicker, .section-kicker { color: var(--accent) !important; }
+.impact-head p, .impact-stat small, .impact-note, .policy-note span, .decision-text, .decision-muted, .queue-item .queue-meta, .queue-empty, .empty-state, .guardrail-card small, .guardrail-card span, .reason-text { color: var(--muted) !important; }
+.impact-note strong, .policy-note strong, .queue-item .customer, .cust-id, .amount-text, .decision-amount { color: var(--ink) !important; }
+.cust-id, .queue-item .customer, .decision-reply { font-family: var(--font-mono) !important; }
+.impact-stat, .guardrail-card, .queue-item, .decision-card, .decision-section, .decision-reply, .flow-step, .lift-pill, .badge-outline { background: var(--surface-2) !important; border-color: var(--hair) !important; }
+.stat-row, tbody td, thead th, .policy-note, .modal-header-custom, .pagination-bar { border-color: var(--hair) !important; }
+tbody td { color: var(--ink-2); }
+tbody tr:hover td { background: var(--surface-2) !important; }
+.badge-recovered { color: var(--ok) !important; } .badge-escalated { color: var(--check) !important; } .badge-stopped { color: var(--issue) !important; } .badge-followup { color: var(--accent) !important; } .badge-notrecovered { color: var(--muted) !important; }
+.guardrail-card.stop strong { color: var(--issue) !important; } .guardrail-card.review strong { color: var(--check) !important; } .guardrail-card.safe strong { color: var(--ok) !important; }
+.lift-pill.positive { color: var(--ok) !important; } .lift-pill.negative { color: var(--issue) !important; } .lift-pill.neutral { color: var(--muted) !important; }
+.btn-log, .queue-view, .pagination-bar button { background: var(--surface) !important; border: 1px solid var(--hair-strong) !important; color: var(--ink) !important; }
+.btn-log:hover, .queue-view:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+.modal-backdrop-custom { background: rgba(21, 24, 30, .45) !important; }
+.modal-close { color: var(--muted) !important; }
+.table-scroll::-webkit-scrollbar-track { background: var(--surface-2); } .table-scroll::-webkit-scrollbar-thumb { background: var(--hair-strong); }
+@media (max-width: 700px) { .rx-main { padding: 20px 16px 40px; } }
 </style>
 </head>
 <body>
+<div class="hd-family"><div class="hd-row"><span class="hd-sig"><b>Harshil Desai</b><span> · Evidence-first tools for Indian finance</span></span><nav aria-label="Other tools by Harshil Desai"><a href="https://chickoo123.github.io/loanlens/">LoanLens</a><a href="https://chickoo123.github.io/paisatrail/">PaisaTrail</a><a href="https://chickoo123.github.io/ipo-reality-lab/">IPO Lab</a><a href="https://github.com/Chickoo123/RecoverX" aria-current="page">RecoverX</a></nav></div></div>
+<main class="rx-main">
+
 
 <div class="topbar">
     <div class="brand">
-        <h1>🔁 RecoverX</h1>
+        <h1><span class="rx-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span>RecoverX</h1>
         <span class="tag">AI Revenue Recovery Agent</span>
     </div>
     <div class="btn-group">
@@ -512,6 +559,7 @@
     </div>
 </div>
 
+</main>
 <script>
 let chart;
 let dataAI = null;
@@ -529,13 +577,13 @@ const centerTextPlugin = {
         const centerX = (left + right) / 2;
         const centerY = (top + bottom) / 2;
         ctx.font = '700 20px Inter';
-        ctx.fillStyle = '#fafafa';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#15181e';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const total = chart.data.datasets[0].data.reduce((a,b)=>a+b, 0);
         ctx.fillText('₹' + total.toLocaleString(), centerX, centerY - 8);
         ctx.font = '400 11px Inter';
-        ctx.fillStyle = '#a1a1aa';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#6a707b';
         ctx.fillText('At-Risk Allocation', centerX, centerY + 14);
         ctx.restore();
     }
@@ -634,18 +682,18 @@ function viewLog(data) {
     if (outcome === "RECOVERED") {
         amountEl.innerText =
             "₹" + parseInt(data.recovered_amount || 0).toLocaleString();
-        amountEl.style.color = "#34d399";
+        amountEl.style.color = "#1f6b45";
     } else if (outcome === "FOLLOW_UP_SCHEDULED") {
         amountEl.innerText =
             "₹" + parseInt(data.follow_up_amount || data.amount || 0).toLocaleString() +
             " scheduled";
-        amountEl.style.color = "#c4b5fd";
+        amountEl.style.color = "#3d3592";
     } else if (outcome === "PENDING_HUMAN_REVIEW") {
         amountEl.innerText = "Human review";
-        amountEl.style.color = "#fbbf24";
+        amountEl.style.color = "#8a5a00";
     } else {
         amountEl.innerText = "₹0 recovered";
-        amountEl.style.color = "#f87171";
+        amountEl.style.color = "#b4321f";
     }
 
     document.getElementById("logModal").classList.add("show");
@@ -835,8 +883,8 @@ function renderSummary(s, results) {
     renderPage();
 
     if (chart) chart.destroy();
-    Chart.defaults.color = '#a1a1aa';
-    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#6a707b';
+    Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
     const ctx = document.getElementById('donutChart').getContext('2d');
     chart = new Chart(ctx, {
         type: 'doughnut',
@@ -844,8 +892,8 @@ function renderSummary(s, results) {
             labels: ['Recovered', 'Follow-up', 'Escalated', 'Stopped', 'Not Recovered'],
             datasets: [{
                 data: [s.total_recovered, s.total_follow_up, s.total_escalated, s.total_stopped, s.total_not_recovered],
-                backgroundColor: ['#34d399', '#c4b5fd', '#fbbf24', '#f87171', '#52525b'],
-                borderColor: '#000000', borderWidth: 3
+                backgroundColor: ['#1f6b45', '#3d3592', '#b07a12', '#b4321f', '#b9bcc3'],
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff', borderWidth: 3
             }]
         },
         options: { responsive:true, cutout:'70%', plugins:{ legend:{ position:'bottom', labels:{ padding:15, font:{size:11}, boxWidth:8 } } } }
